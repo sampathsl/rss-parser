@@ -1,0 +1,1 @@
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (1, 'test-url1','A00','BB212',{ts '2012-09-17 18:47:52.69'}, {ts '2012-09-17 18:47:52.69'});
