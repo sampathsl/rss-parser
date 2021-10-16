@@ -1,9 +1,12 @@
 package com.gifted.rss.controller;
 
+import com.gifted.rss.entity.RSSFeed;
 import com.gifted.rss.service.RSSFeedService;
+import com.gifted.rss.util.DataIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,18 +26,18 @@ public class RSSFeedController {
         return "RSS Feed Parser is Up and Running!";
     }
 
-    //GET http://<host>:<port>/items?page=1&size=2&sort=updated_date&direction=asc
     @GetMapping("/items")
-    public String getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
-                           @RequestParam(required = false, defaultValue = "10") Integer size,
-                           @RequestParam(required = false, defaultValue = "updated_date") String sortBy,
-                           @RequestParam(required = false, defaultValue = "desc") String direction) {
+    public Page<RSSFeed> getItems(@RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                                  @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+                                  @RequestParam(name = "sortBy", required = false, defaultValue = "updated_date")
+                                  @DataIn(anyOf = {"publication_date", "updated_date"}) String sortBy,
+                                  @RequestParam(name = "direction", required = false, defaultValue = "desc")
+                                  @DataIn(anyOf = {"asc", "desc"}) String direction) {
         logger.info(page.toString());
         logger.info(size.toString());
         logger.info(sortBy);
         logger.info(direction);
-        rssFeedService.getLatestRSSFeeds(page,size,sortBy,direction);
-        return "TODO!";
+        return rssFeedService.getLatestRSSFeeds(page, size, sortBy, direction);
     }
 
 }
