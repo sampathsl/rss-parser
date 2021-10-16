@@ -1,5 +1,6 @@
 package com.gifted.rss.service;
 
+import com.gifted.rss.dto.RSSFeedDto;
 import com.gifted.rss.entity.RSSFeed;
 import com.gifted.rss.repository.RSSFeedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,24 @@ public class RSSFeedServiceImpl implements RSSFeedService {
         return rssFeedRepository.findById(id);
     }
 
-    public Page<RSSFeed> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
+    public Page<RSSFeedDto> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
         // TODO - PREPARE Pageable
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        return rssFeedRepository.findLatestRSSFeeds(pageable);
+        return toPageObjectDto(rssFeedRepository.findAll(pageable));
+    }
+
+    public Page<RSSFeedDto> toPageObjectDto(Page<RSSFeed> rssFeeds) {
+        return rssFeeds.map(this::convertToObjectDto);
+    }
+
+    private RSSFeedDto convertToObjectDto(RSSFeed rssFeed) {
+        RSSFeedDto dto = new RSSFeedDto();
+        dto.setLink(rssFeed.getLink());
+        dto.setTitle(rssFeed.getTitle());
+        dto.setDescription(rssFeed.getDescription());
+        dto.setPublicationDate(rssFeed.getPublicationDate());
+        dto.setUpdatedDate(rssFeed.getUpdatedDate());
+        return dto;
     }
 
     public Optional<RSSFeed> updateRSSFeed(RSSFeed updateRSSFeed) {

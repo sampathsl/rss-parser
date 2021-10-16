@@ -17,6 +17,6 @@ public class DataInValidator implements ConstraintValidator<DataIn, String> {
         if (value == null) {
             return true;
         }
-        return Arrays.asList(inputData).contains(value.toLowerCase());
+        return Arrays.asList(inputData).contains(value);
     }
 }
