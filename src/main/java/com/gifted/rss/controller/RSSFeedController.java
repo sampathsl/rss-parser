@@ -33,10 +33,6 @@ public class RSSFeedController {
                                      @DataIn(anyOf = {"id", "link", "title", "description", "publicationDate", "updatedDate"}) String sortBy,
                                      @RequestParam(name = "direction", required = false, defaultValue = "desc")
                                      @DataIn(anyOf = {"asc", "desc"}) String direction) {
-        logger.info(page.toString());
-        logger.info(size.toString());
-        logger.info(sortBy);
-        logger.info(direction);
         return rssFeedService.getLatestRSSFeeds(page, size, sortBy, direction);
     }
 

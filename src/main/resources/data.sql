@@ -1,1 +1,10 @@
-INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (1, 'test-url1','A00','BB212',{ts '2012-09-17 18:47:52.69'}, {ts '2012-09-17 18:47:52.69'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (1, 'test-url1','A01','BB212',{ts '2012-09-17 18:47:52.69'}, {ts '2012-09-17 18:47:52.69'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (2, 'test-url2','A02','BB212',{ts '2012-09-17 18:47:52.70'}, {ts '2012-09-17 18:47:52.70'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (3, 'test-url3','A03','BB212',{ts '2012-09-17 18:47:52.80'}, {ts '2012-09-17 18:47:52.80'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (4, 'test-url4','A04','BB212',{ts '2012-09-17 18:47:52.81'}, {ts '2012-09-17 18:47:52.81'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (5, 'test-url5','A05','BB212',{ts '2012-09-17 18:47:52.82'}, {ts '2012-09-17 18:47:52.82'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (6, 'test-url6','A06','BB212',{ts '2012-09-17 18:47:52.83'}, {ts '2012-09-17 18:47:52.83'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (7, 'test-url7','A07','BB212',{ts '2012-09-17 18:47:52.84'}, {ts '2012-09-17 18:47:52.84'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (8, 'test-url8','A08','BB212',{ts '2012-09-17 18:47:52.85'}, {ts '2012-09-17 18:47:52.85'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (9, 'test-url9','A09','BB212',{ts '2012-09-17 18:47:52.86'}, {ts '2012-09-17 18:47:52.86'});
+INSERT INTO rss_feed(id,link,title,description,publication_date,updated_date) VALUES (10, 'test-url10','A10','BB212',{ts '2012-09-17 18:47:52.87'}, {ts '2012-09-17 18:47:52.87'});

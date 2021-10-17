@@ -32,8 +32,10 @@ public class RSSFeedServiceImpl implements RSSFeedService {
     }
 
     public Page<RSSFeedDto> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
-        // TODO - PREPARE Pageable
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        if (direction.contentEquals("asc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        }
         return toPageObjectDto(rssFeedRepository.findAll(pageable));
     }
 
