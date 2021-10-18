@@ -13,6 +13,5 @@ public interface RSSFeedService {
     public Optional<RSSFeed> getRSSFeed(Long id);
     public Page<RSSFeed> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction);
     public Page<RSSFeedDto> getLatestRSSData(Integer page, Integer size, String sortBy, String direction);
-    public Optional<RSSFeed> updateRSSFeed(RSSFeed updateRSSFeed);
-    public String deleteRSSFeedById(Long id);
+    public RSSFeed updateRSSFeed(RSSFeed updateRSSFeed);
 }

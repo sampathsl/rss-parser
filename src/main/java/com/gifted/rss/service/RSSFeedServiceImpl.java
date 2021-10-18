@@ -58,22 +58,8 @@ public class RSSFeedServiceImpl implements RSSFeedService {
         return dto;
     }
 
-    public Optional<RSSFeed> updateRSSFeed(RSSFeed updateRSSFeed) {
-        // TODO - find unique???
-        /*Optional<RSSFeed> optionalRSSFeedOld = rssFeedRepository.findById(updateRSSFeed.getId());
-        if (optionalRSSFeedOld.isPresent()) {
-            RSSFeed oldRSSFeed = optionalRSSFeedOld.get();
-            oldRSSFeed.setDescription(oldRSSFeed.getDescription());
-            oldRSSFeed.setTitle(oldRSSFeed.getTitle());
-            oldRSSFeed.setUpdatedDate(oldRSSFeed.getUpdatedDate());
-            oldRSSFeed.setPublicationDate(oldRSSFeed.getPublicationDate());
-            rssFeedRepository.save(oldRSSFeed);
-        }*/
-        return Optional.of(updateRSSFeed);
-    }
-
-    public String deleteRSSFeedById(Long id) {
-        return "";
+    public RSSFeed updateRSSFeed(RSSFeed updateRSSFeed) {
+        return rssFeedRepository.save(updateRSSFeed);
     }
 
 }
