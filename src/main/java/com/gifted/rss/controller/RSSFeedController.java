@@ -2,6 +2,7 @@ package com.gifted.rss.controller;
 
 import com.gifted.rss.dto.RSSFeedDto;
 import com.gifted.rss.service.RSSFeedService;
+import com.gifted.rss.util.Constant;
 import com.gifted.rss.util.DataIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class RSSFeedController {
                                      @DataIn(anyOf = {"id", "link", "title", "description", "publicationDate", "updatedDate"}) String sortBy,
                                      @RequestParam(name = "direction", required = false, defaultValue = "desc")
                                      @DataIn(anyOf = {"asc", "desc"}) String direction) {
-        return rssFeedService.getLatestRSSFeeds(page, size, sortBy, direction);
+        return rssFeedService.getLatestRSSData(page, size, sortBy, direction);
     }
 
 }

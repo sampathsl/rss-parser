@@ -31,12 +31,17 @@ public class RSSFeedServiceImpl implements RSSFeedService {
         return rssFeedRepository.findById(id);
     }
 
-    public Page<RSSFeedDto> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
+    @Override
+    public Page<RSSFeed> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         if (direction.contentEquals("asc")) {
             pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         }
-        return toPageObjectDto(rssFeedRepository.findAll(pageable));
+        return rssFeedRepository.findAll(pageable);
+    }
+
+    public Page<RSSFeedDto> getLatestRSSData(Integer page, Integer size, String sortBy, String direction) {
+        return toPageObjectDto(getLatestRSSFeeds(page, size, sortBy, direction));
     }
 
     public Page<RSSFeedDto> toPageObjectDto(Page<RSSFeed> rssFeeds) {
