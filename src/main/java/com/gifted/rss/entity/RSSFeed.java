@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "rss_feed")
-public class RSSFeed extends BaseEntity {
+public class RSSFeed extends BaseEntity implements Comparable {
 
     @NotBlank
     private String link;
@@ -33,4 +33,32 @@ public class RSSFeed extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Timestamp updatedDate;
 
+    @Override
+    public int compareTo(Object o) {
+        return this.getPublicationDate().compareTo(((RSSFeed) o).getPublicationDate()) == 1 ? 0 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RSSFeed rssFeed = (RSSFeed) o;
+
+        if (!link.equals(rssFeed.link)) return false;
+        if (!title.equals(rssFeed.title)) return false;
+        if (!description.equals(rssFeed.description)) return false;
+        if (!publicationDate.equals(rssFeed.publicationDate)) return false;
+        return updatedDate != null ? updatedDate.equals(rssFeed.updatedDate) : rssFeed.updatedDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = link.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + publicationDate.hashCode();
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        return result;
+    }
 }
