@@ -52,7 +52,6 @@ public class RSSFeedTaskScheduler {
 
     @Scheduled(cron = "${rss.feed.scheduler.expression:0 0/5 * * * ?}")
     public void scheduleFixedDelayTask() throws IOException, FeedException {
-        this.logger.info("Fixed delay task - " + System.currentTimeMillis() / 1000);
         SyndFeedInput input = new SyndFeedInput();
         URL feedUrl = new URL(rssFeed);
         URLConnection conn = feedUrl.openConnection();
@@ -60,6 +59,7 @@ public class RSSFeedTaskScheduler {
         ZonedDateTime zdtLatest = ZonedDateTime.parse(map.get("Last-Modified").get(0), DateTimeFormatter.RFC_1123_DATE_TIME);
 
         if ((zdt == null) || ((zdt != null) && zdt.isBefore(zdtLatest))) {
+            this.logger.info("Loading RSS Feeds " + zdtLatest.toString());
             this.zdt = zdtLatest;
             SyndFeed feed = input.build(new XmlReader(feedUrl));
             List<RSSFeed> rssFeeds = new ArrayList<>();
@@ -79,7 +79,16 @@ public class RSSFeedTaskScheduler {
             List<RSSFeed> latestRssFeeds = rssFeeds.stream().limit(Constant.DEFAULT_MAX_DB_FETCH_COUNT).collect(Collectors.toList());
             List<RSSFeed> existingRssFeeds = rssFeedService.getLatestRSSFeeds(Constant.DEFAULT_PAGE, Constant.DEFAULT_MAX_DB_FETCH_COUNT,
                     Constant.DEFAULT_SORT_BY, Constant.DEFAULT_DIRECTION).toList();
-            List[] rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
+
+            // Update records with already captured
+            List[] rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, updatedRSSFeeds);
+            logger.info(String.valueOf(rssFeedsLists[0].stream().count()));
+            logger.info(String.valueOf(rssFeedsLists[1].stream().count()));
+            updateAllRSSFeeds(rssFeedsLists[1]);
+
+            // Remove already updated RSSFeeds
+            latestRssFeeds.removeAll(updatedRSSFeeds);
+            rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
             logger.info(String.valueOf(rssFeedsLists[0].stream().count()));
             logger.info(String.valueOf(rssFeedsLists[1].stream().count()));
             addAllRSSFeeds(rssFeedsLists[0]);
