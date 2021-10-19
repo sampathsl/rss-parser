@@ -1,0 +1,25 @@
+version: '2'
+services:
+  dev-server:
+    container_name: dev-server
+    build:
+      context: docker-dev-server
+      dockerfile: Dockerfile
+    image: dev-rss-parser:latest
+    ports:
+      - 8080:8080
+    networks:
+      - spring-cloud-network
+  production-server:
+    container_name: production-server
+    build:
+      context: docker-production-server
+      dockerfile: Dockerfile
+    image: production-rss-parser:latest
+    ports:
+      - 19999:8080
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
