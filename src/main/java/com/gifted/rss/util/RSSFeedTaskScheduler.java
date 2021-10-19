@@ -90,8 +90,8 @@ public class RSSFeedTaskScheduler {
             List[] rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, updatedRSSFeeds);
             String newRSSFeedCount = String.valueOf(rssFeedsLists[0].stream().count());
             String updatedRSSFeedCount = String.valueOf(rssFeedsLists[1].stream().count());
-            logger.info("New RSS Feed Count: {}", newRSSFeedCount);
-            logger.info("Updated RSS Feed Count: {}", updatedRSSFeedCount);
+            logger.info("New RSS Feed Count - by getUpdatedDate: {}", newRSSFeedCount);
+            logger.info("Updated RSS Feed Count - by getUpdatedDate: {}", updatedRSSFeedCount);
             updateAllRSSFeeds(rssFeedsLists[1]);
 
             // Remove already updated RSSFeeds
@@ -113,11 +113,11 @@ public class RSSFeedTaskScheduler {
         rssFeedService.addRSSFeeds(newRssFeeds);
     }
 
-    private void updateAllRSSFeeds(List<RSSFeed> updatedRssFeeds) {
-        updatedRssFeeds.forEach(rssFedd -> rssFeedService.updateRSSFeed(rssFedd));
+    public void updateAllRSSFeeds(List<RSSFeed> updatedRssFeeds) {
+        updatedRssFeeds.forEach(rssFeed -> rssFeedService.updateRSSFeed(rssFeed));
     }
 
-    private List[] getNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
+    public List[] getNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
         List[] newAndUpdatedRSSFeeds = new List[2];
         List<RSSFeed> newRSSFeeds = new ArrayList<>();
         List<RSSFeed> updatedRSSFeeds = new ArrayList<>();
@@ -153,9 +153,9 @@ public class RSSFeedTaskScheduler {
                         (updatedRSSFeed.getTitle().equals(old.getLink()) &&
                                 updatedRSSFeed.getDescription().equals(old.getDescription())))
                 .forEach(newOrUpdatedList::add);
-        if (oldRssFeeds.isEmpty()) {
+        if (newOrUpdatedList.isEmpty()) {
             return updatedRSSFeed;
-        } else if (oldRssFeeds.size() == 1) {
+        } else if (newOrUpdatedList.size() == 1) {
             return updateOldRSSFeed(oldRssFeeds.get(0), updatedRSSFeed);
         }
         throw new RSSFeedNotFound("Old RSSFeed Feed Not Found!");

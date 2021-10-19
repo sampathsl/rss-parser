@@ -45,20 +45,18 @@ public class RSSFeed extends BaseEntity implements Comparable<RSSFeed> {
 
         RSSFeed rssFeed = (RSSFeed) o;
 
-        if (!link.equals(rssFeed.link)) return false;
-        if (!title.equals(rssFeed.title)) return false;
-        if (!description.equals(rssFeed.description)) return false;
-        if (!publicationDate.equals(rssFeed.publicationDate)) return false;
-        return updatedDate != null ? updatedDate.equals(rssFeed.updatedDate) : rssFeed.updatedDate == null;
+        if (link != null ? !link.equals(rssFeed.link) : rssFeed.link != null) return false;
+        if (title != null ? !title.equals(rssFeed.title) : rssFeed.title != null) return false;
+        if (description != null ? !description.equals(rssFeed.description) : rssFeed.description != null) return false;
+        return publicationDate != null ? publicationDate.equals(rssFeed.publicationDate) : rssFeed.publicationDate == null;
     }
 
     @Override
     public int hashCode() {
-        int result = link.hashCode();
-        result = 31 * result + title.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + publicationDate.hashCode();
-        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        int result = link != null ? link.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (publicationDate != null ? publicationDate.hashCode() : 0);
         return result;
     }
 }
