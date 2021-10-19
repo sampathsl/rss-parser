@@ -16,8 +16,12 @@ import java.util.Optional;
 @Service
 public class RSSFeedServiceImpl implements RSSFeedService {
 
-    @Autowired
     private RSSFeedRepository rssFeedRepository;
+
+    @Autowired
+    public RSSFeedServiceImpl(RSSFeedRepository rssFeedRepository) {
+        this.rssFeedRepository = rssFeedRepository;
+    }
 
     public RSSFeed addRSSFeed(RSSFeed rssFeed) {
         return rssFeedRepository.save(rssFeed);
