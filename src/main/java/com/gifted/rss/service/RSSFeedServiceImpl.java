@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RSSFeedServiceImpl implements RSSFeedService {
@@ -23,16 +22,8 @@ public class RSSFeedServiceImpl implements RSSFeedService {
         this.rssFeedRepository = rssFeedRepository;
     }
 
-    public RSSFeed addRSSFeed(RSSFeed rssFeed) {
-        return rssFeedRepository.save(rssFeed);
-    }
-
     public List<RSSFeed> addRSSFeeds(List<RSSFeed> rssFeeds) {
         return (List<RSSFeed>) rssFeedRepository.saveAll(rssFeeds);
-    }
-
-    public Optional<RSSFeed> getRSSFeed(Long id) {
-        return rssFeedRepository.findById(id);
     }
 
     @Override

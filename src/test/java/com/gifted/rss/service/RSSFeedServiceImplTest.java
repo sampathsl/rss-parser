@@ -1,15 +1,15 @@
 package com.gifted.rss.service;
 
+import com.gifted.rss.dto.RSSFeedDto;
 import com.gifted.rss.entity.RSSFeed;
 import com.gifted.rss.repository.RSSFeedRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RSSFeedServiceImplTest {
 
     private Logger logger = LoggerFactory.getLogger(RSSFeedServiceImplTest.class);
@@ -33,7 +33,6 @@ public class RSSFeedServiceImplTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         rssFeedService = new RSSFeedServiceImpl(rssFeedRepository);
         List<RSSFeed> mockRSSFeeds = this.getMockRSRssFeeds();
         Pageable paging = PageRequest.of(0, 2);
@@ -48,6 +47,25 @@ public class RSSFeedServiceImplTest {
         Page<RSSFeed> pagableRSSFeeds = rssFeedService.getLatestRSSFeeds(0, 2, "updatedDate", "desc");
         Assert.assertNotNull(pagableRSSFeeds);
         Assert.assertEquals(rssFeedPage.get().count(), pagableRSSFeeds.get().count());
+    }
+
+    @Test
+    public void getLatestRSSDataTest() {
+        logger.info("Get All RSSFeeds Data Test");
+        Pageable pageable = PageRequest.of(0, 2, Sort.by("updatedDate").ascending());
+        Mockito.when(rssFeedRepository.findAll(pageable)).thenReturn(rssFeedPage);
+        Page<RSSFeedDto> pagableRSSFeeds = rssFeedService.getLatestRSSData(0, 2, "updatedDate", "asc");
+        Assert.assertNotNull(pagableRSSFeeds);
+        Assert.assertEquals(rssFeedPage.get().count(), pagableRSSFeeds.get().count());
+    }
+
+    @Test
+    public void addRSSFeedsTest() {
+        logger.info("Save RSSFeeds Test");
+        Mockito.doReturn(this.getMockRSRssFeeds()).when(rssFeedRepository).saveAll(Mockito.any(List.class));
+        List<RSSFeed> rssFeeds = rssFeedService.addRSSFeeds(this.getMockRSRssFeeds());
+        Assert.assertNotNull(rssFeeds);
+        Assert.assertEquals(this.getMockRSRssFeeds().size(), rssFeeds.size());
     }
 
     private List<RSSFeed> getMockRSRssFeeds() {
