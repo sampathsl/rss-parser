@@ -35,10 +35,6 @@ public class RSSFeedTaskScheduler {
     private RSSFeedService rssFeedService;
     private ZonedDateTime zdt = ZonedDateTime.parse("Sat, 01 Jan 2000 00:00:00 GMT", DateTimeFormatter.RFC_1123_DATE_TIME);
 
-    public RSSFeedTaskScheduler() {
-        this.logger = LoggerFactory.getLogger(RSSFeedTaskScheduler.class);
-    }
-
     @Autowired
     public RSSFeedTaskScheduler(RSSFeedService rssFeedService) {
         this.rssFeedService = rssFeedService;
@@ -109,12 +105,12 @@ public class RSSFeedTaskScheduler {
 
     }
 
-    private void addAllRSSFeeds(List<RSSFeed> newRssFeeds) {
+    public void addAllRSSFeeds(List<RSSFeed> newRssFeeds) {
         rssFeedService.addRSSFeeds(newRssFeeds);
     }
 
     public void updateAllRSSFeeds(List<RSSFeed> updatedRssFeeds) {
-        updatedRssFeeds.forEach(rssFeed -> rssFeedService.updateRSSFeed(rssFeed));
+        updatedRssFeeds.forEach(rssFeedForUpdate -> rssFeedService.updateRSSFeed(rssFeedForUpdate));
     }
 
     public List[] getNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
@@ -158,7 +154,7 @@ public class RSSFeedTaskScheduler {
         } else if (newOrUpdatedList.size() == 1) {
             return updateOldRSSFeed(oldRssFeeds.get(0), updatedRSSFeed);
         }
-        throw new RSSFeedNotFound("Old RSSFeed Feed Not Found!");
+        throw new RSSFeedNotFound("Old RSSFeed Not Found!");
     }
 
     private RSSFeed updateOldRSSFeed(RSSFeed oldRSSFeed, RSSFeed newRSSFeed) {

@@ -28,16 +28,30 @@ public class RSSFeedControllerTests {
     }
 
     @Test
-    public void testGetItems() throws Exception {
+    public void getItemsTest() throws Exception {
         mockMvc.perform(get("/items?page=1&size=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", IsCollectionWithSize.hasSize(0)));
     }
 
     @Test
-    public void testGetEmptyItems() throws Exception {
-        mockMvc.perform(get("/items?page=1&size=1"))
+    public void getEmptyItemsWithOutParamTest() throws Exception {
+        mockMvc.perform(get("/items"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.last").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.first").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.number").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfElements").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(10))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.empty").value(true));
+    }
+
+    @Test
+    public void getEmptyItemsWithParamTest() throws Exception {
+        mockMvc.perform(get("/items?page=1&size=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.last").value(true))
@@ -48,6 +62,12 @@ public class RSSFeedControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfElements").value(0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.empty").value(true));
+    }
+
+    @Test
+    public void getEmptyItemsWithParamEmptyTest() throws Exception {
+        mockMvc.perform(get("/items?page=&size="))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 }
