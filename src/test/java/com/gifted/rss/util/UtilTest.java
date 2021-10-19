@@ -12,8 +12,8 @@ public class UtilTest {
         Assert.assertEquals(0, Constant.DEFAULT_PAGE);
         Assert.assertEquals(10, Constant.DEFAULT_PAGE_SIZE);
         Assert.assertEquals(5000, Constant.DEFAULT_MAX_DB_FETCH_COUNT);
-        Assert.assertEquals(DIRECTION.DESC.getValue(), Constant.DEFAULT_DIRECTION);
-        Assert.assertEquals(SORTBY.UPDATED_DATE.getValue(), Constant.DEFAULT_SORT_BY);
+        Assert.assertEquals(Constant.DEFAULT_DIRECTION, DIRECTION.DESC.getValue());
+        Assert.assertEquals(Constant.DEFAULT_SORT_BY, SORTBY.UPDATED_DATE.getValue());
     }
 
     @Test
