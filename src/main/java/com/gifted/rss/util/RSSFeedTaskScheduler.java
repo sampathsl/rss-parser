@@ -1,6 +1,7 @@
 package com.gifted.rss.util;
 
 import com.gifted.rss.entity.RSSFeed;
+import com.gifted.rss.exception.ConnectionErrorException;
 import com.gifted.rss.exception.RSSFeedNotFound;
 import com.gifted.rss.service.RSSFeedService;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -51,13 +52,18 @@ public class RSSFeedTaskScheduler {
     }
 
     @Scheduled(cron = "${rss.feed.scheduler.expression:0 0/5 * * * ?}")
-    public void scheduleFixedDelayTask() throws IOException, FeedException {
+    public void loadRSSFeeds() throws IOException, FeedException, ConnectionErrorException {
+
+        this.logger.info("Start executing RSSFeed Loader");
         SyndFeedInput input = new SyndFeedInput();
         URL feedUrl = new URL(rssFeed);
         URLConnection conn = feedUrl.openConnection();
         Map<String, List<String>> map = conn.getHeaderFields();
-        ZonedDateTime zdtLatest = ZonedDateTime.parse(map.get("Last-Modified").get(0), DateTimeFormatter.RFC_1123_DATE_TIME);
+        if (map.size() == 0) {
+            throw new ConnectionErrorException("Could not able to connect RSS Feed server!");
+        }
 
+        ZonedDateTime zdtLatest = ZonedDateTime.parse(map.get("Last-Modified").get(0), DateTimeFormatter.RFC_1123_DATE_TIME);
         if ((zdt == null) || ((zdt != null) && zdt.isBefore(zdtLatest))) {
             this.logger.info("Loading RSS Feeds " + zdtLatest.toString());
             this.zdt = zdtLatest;
