@@ -2,7 +2,6 @@ package com.gifted.rss.controller;
 
 import com.gifted.rss.dto.RSSFeedDto;
 import com.gifted.rss.service.RSSFeedService;
-import com.gifted.rss.util.Constant;
 import com.gifted.rss.util.DataIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "rss_feed")
-public class RSSFeed extends BaseEntity implements Comparable {
+public class RSSFeed extends BaseEntity implements Comparable<RSSFeed> {
 
     @NotBlank
     private String link;
@@ -34,8 +34,8 @@ public class RSSFeed extends BaseEntity implements Comparable {
     private Timestamp updatedDate;
 
     @Override
-    public int compareTo(Object o) {
-        return this.getPublicationDate().compareTo(((RSSFeed) o).getPublicationDate()) == 1 ? 0 : 1;
+    public int compareTo(RSSFeed rssFeed) {
+        return this.getPublicationDate().compareTo((rssFeed).getPublicationDate()) == 1 ? 0 : 1;
     }
 
     @Override

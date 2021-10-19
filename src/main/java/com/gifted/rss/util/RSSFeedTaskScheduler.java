@@ -64,8 +64,9 @@ public class RSSFeedTaskScheduler {
         }
 
         ZonedDateTime zdtLatest = ZonedDateTime.parse(map.get("Last-Modified").get(0), DateTimeFormatter.RFC_1123_DATE_TIME);
-        if ((zdt == null) || ((zdt != null) && zdt.isBefore(zdtLatest))) {
-            this.logger.info("Loading RSS Feeds " + zdtLatest.toString());
+        if ((zdt == null) || (zdt.isBefore(zdtLatest))) {
+            String zdtLatestTime = zdtLatest.toString();
+            this.logger.info("Loading RSS Feeds {}", zdtLatestTime);
             this.zdt = zdtLatest;
             SyndFeed feed = input.build(new XmlReader(feedUrl));
             List<RSSFeed> rssFeeds = new ArrayList<>();
@@ -73,11 +74,11 @@ public class RSSFeedTaskScheduler {
             feed.getEntries().forEach(item -> {
                 Timestamp updatedDate = item.getUpdatedDate() != null ? new Timestamp(item.getUpdatedDate().getTime()) :
                         new Timestamp(item.getPublishedDate().getTime());
-                RSSFeed rssFeed = new RSSFeed(item.getLink().trim(), item.getTitle().trim(), item.getDescription().getValue().trim(),
+                RSSFeed newRssFeed = new RSSFeed(item.getLink().trim(), item.getTitle().trim(), item.getDescription().getValue().trim(),
                         new Timestamp(item.getPublishedDate().getTime()), updatedDate);
-                rssFeeds.add(rssFeed);
+                rssFeeds.add(newRssFeed);
                 if (item.getUpdatedDate() != null) {
-                    updatedRSSFeeds.add(rssFeed);
+                    updatedRSSFeeds.add(newRssFeed);
                 }
             });
 
@@ -88,15 +89,19 @@ public class RSSFeedTaskScheduler {
 
             // Update records with already captured
             List[] rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, updatedRSSFeeds);
-            logger.info(String.valueOf(rssFeedsLists[0].stream().count()));
-            logger.info(String.valueOf(rssFeedsLists[1].stream().count()));
+            String newRSSFeedCount = String.valueOf(rssFeedsLists[0].stream().count());
+            String updatedRSSFeedCount = String.valueOf(rssFeedsLists[1].stream().count());
+            logger.info("{}", newRSSFeedCount);
+            logger.info("{}", updatedRSSFeedCount);
             updateAllRSSFeeds(rssFeedsLists[1]);
 
             // Remove already updated RSSFeeds
             latestRssFeeds.removeAll(updatedRSSFeeds);
             rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
-            logger.info(String.valueOf(rssFeedsLists[0].stream().count()));
-            logger.info(String.valueOf(rssFeedsLists[1].stream().count()));
+            newRSSFeedCount = String.valueOf(rssFeedsLists[0].stream().count());
+            updatedRSSFeedCount = String.valueOf(rssFeedsLists[1].stream().count());
+            logger.info("{}", newRSSFeedCount);
+            logger.info("{}", updatedRSSFeedCount);
             addAllRSSFeeds(rssFeedsLists[0]);
             updateAllRSSFeeds(rssFeedsLists[1]);
         }
@@ -108,9 +113,7 @@ public class RSSFeedTaskScheduler {
     }
 
     private void updateAllRSSFeeds(List<RSSFeed> updatedRssFeeds) {
-        updatedRssFeeds.forEach(rssFedd -> {
-            rssFeedService.updateRSSFeed(rssFedd);
-        });
+        updatedRssFeeds.forEach(rssFedd -> rssFeedService.updateRSSFeed(rssFedd));
     }
 
     private List[] getNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
@@ -118,16 +121,16 @@ public class RSSFeedTaskScheduler {
         List<RSSFeed> newRSSFeeds = new ArrayList<>();
         List<RSSFeed> updatedRSSFeeds = new ArrayList<>();
         List<RSSFeed> allNewAndUpdatedRSSFeeds = getAllNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
-        allNewAndUpdatedRSSFeeds.forEach(rssFeed -> {
+        allNewAndUpdatedRSSFeeds.forEach(rf -> {
             try {
-                RSSFeed updatedRSSFeed = updateExistingRSSFeed(existingRssFeeds, rssFeed);
+                RSSFeed updatedRSSFeed = updateExistingRSSFeed(existingRssFeeds, rf);
                 if (updatedRSSFeed.isNew()) {
                     newRSSFeeds.add(updatedRSSFeed);
                 } else {
                     updatedRSSFeeds.add(updatedRSSFeed);
                 }
             } catch (RSSFeedNotFound exception) {
-                logger.error("Existing RSSFeed Not Found for ", rssFeed.getTitle(), exception.getMessage());
+                logger.error("Existing RSSFeed Not Found for {} {} ", rf.getTitle(), exception.getMessage());
             }
         });
         newAndUpdatedRSSFeeds[0] = newRSSFeeds;
@@ -136,7 +139,7 @@ public class RSSFeedTaskScheduler {
     }
 
     private List<RSSFeed> getAllNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
-        return latestRssFeeds.stream().filter(rssFeed -> !existingRssFeeds.contains(rssFeed)).distinct().collect(Collectors.toList());
+        return latestRssFeeds.stream().filter(rf -> !existingRssFeeds.contains(rf)).distinct().collect(Collectors.toList());
     }
 
     private RSSFeed updateExistingRSSFeed(List<RSSFeed> oldRssFeeds, RSSFeed updatedRSSFeed) throws RSSFeedNotFound {
@@ -149,7 +152,7 @@ public class RSSFeedTaskScheduler {
                         (updatedRSSFeed.getTitle().equals(old.getLink()) &&
                                 updatedRSSFeed.getDescription().equals(old.getDescription())))
                 .forEach(newOrUpdatedList::add);
-        if (oldRssFeeds.size() == 0) {
+        if (oldRssFeeds.isEmpty()) {
             return updatedRSSFeed;
         } else if (oldRssFeeds.size() == 1) {
             return updateOldRSSFeed(oldRssFeeds.get(0), updatedRSSFeed);

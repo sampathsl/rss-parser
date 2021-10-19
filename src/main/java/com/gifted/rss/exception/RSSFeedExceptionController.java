@@ -15,7 +15,7 @@ public class RSSFeedExceptionController {
     public ResponseEntity<Object> handleCommonException(Exception ex, WebRequest request) {
         APIError apiError = new APIError(
                 HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "Internal server error occurred");
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }
 

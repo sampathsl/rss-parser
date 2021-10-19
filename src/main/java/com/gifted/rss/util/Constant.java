@@ -9,4 +9,5 @@ public class Constant {
     public static final String DEFAULT_SORT_BY = SORTBY.UPDATED_DATE.getValue();
     public static final String DEFAULT_DIRECTION = DIRECTION.DESC.getValue();
     public static final int DEFAULT_MAX_DB_FETCH_COUNT = 5000;
+    private Constant() {}
 }
