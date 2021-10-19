@@ -150,7 +150,7 @@ public class RSSFeedTaskScheduler {
                         updatedRSSFeed.getTitle().equals(old.getTitle())) ||
                         (updatedRSSFeed.getLink().equals(old.getLink()) &&
                                 updatedRSSFeed.getDescription().equals(old.getDescription())) ||
-                        (updatedRSSFeed.getTitle().equals(old.getLink()) &&
+                        (updatedRSSFeed.getTitle().equals(old.getTitle()) &&
                                 updatedRSSFeed.getDescription().equals(old.getDescription())))
                 .forEach(newOrUpdatedList::add);
         if (newOrUpdatedList.isEmpty()) {
