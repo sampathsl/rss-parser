@@ -65,8 +65,7 @@ public class RSSFeedTaskScheduler {
 
         ZonedDateTime zdtLatest = ZonedDateTime.parse(map.get("Last-Modified").get(0), DateTimeFormatter.RFC_1123_DATE_TIME);
         if ((zdt == null) || (zdt.isBefore(zdtLatest))) {
-            String zdtLatestTime = zdtLatest.toString();
-            this.logger.info("Loading RSS Feeds {}", zdtLatestTime);
+            this.logger.info("Getting new RSS Feeds {}", zdtLatest);
             this.zdt = zdtLatest;
             SyndFeed feed = input.build(new XmlReader(feedUrl));
             List<RSSFeed> rssFeeds = new ArrayList<>();
@@ -91,8 +90,8 @@ public class RSSFeedTaskScheduler {
             List[] rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, updatedRSSFeeds);
             String newRSSFeedCount = String.valueOf(rssFeedsLists[0].stream().count());
             String updatedRSSFeedCount = String.valueOf(rssFeedsLists[1].stream().count());
-            logger.info("{}", newRSSFeedCount);
-            logger.info("{}", updatedRSSFeedCount);
+            logger.info("New RSS Feed Count: {}", newRSSFeedCount);
+            logger.info("Updated RSS Feed Count: {}", updatedRSSFeedCount);
             updateAllRSSFeeds(rssFeedsLists[1]);
 
             // Remove already updated RSSFeeds
@@ -100,10 +99,12 @@ public class RSSFeedTaskScheduler {
             rssFeedsLists = getNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
             newRSSFeedCount = String.valueOf(rssFeedsLists[0].stream().count());
             updatedRSSFeedCount = String.valueOf(rssFeedsLists[1].stream().count());
-            logger.info("{}", newRSSFeedCount);
-            logger.info("{}", updatedRSSFeedCount);
+            logger.info("New RSS Feed Count: {}", newRSSFeedCount);
+            logger.info("Updated RSS Feed Count: {}", updatedRSSFeedCount);
             addAllRSSFeeds(rssFeedsLists[0]);
             updateAllRSSFeeds(rssFeedsLists[1]);
+        } else {
+            this.logger.info("New RSS Feeds Not Found. Ending  Scheduler Process {}", zdt);
         }
 
     }
