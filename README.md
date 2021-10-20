@@ -23,13 +23,18 @@ RSSFeed Parser is a [Spring Boot](https://spring.io/guides/gs/spring-boot) appli
 ```
 git clone https://github.com/sampathsl/rss-parser.git
 cd rss-parser
+./mvnw package
 docker-compose up
 ```
 
-> NOTE: To run docker container as RssParser application you need to install docker in your machine. Sometimes Windows users may not able to run dockerized RssParser application.
+> NOTE: Before run docker-compose command first you need to build the application.To run docker container as RssParser 
+> application you need to 
+> install docker in your machine. Sometimes Windows OS users may not able to run dockerized RssParser application.
 
 
 After successfully running the application you can access RSSFeed Parser API here: http://localhost:8080/items
+
+> NOTE: For the first time it will take 5 minutes to load the RSSFeeds in the RSSFeed Parser API.
 
 <img width="1042" alt="rssfeed-api-screenshot" src="https://github.com/sampathsl/rss-parser/blob/master/docs/api.png">
 
