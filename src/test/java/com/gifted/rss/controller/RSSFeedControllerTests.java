@@ -28,6 +28,12 @@ public class RSSFeedControllerTests {
     }
 
     @Test
+    public void welcome() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
     public void getItemsInitialTest() throws Exception {
         mockMvc.perform(get("/items?page=0&size=10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

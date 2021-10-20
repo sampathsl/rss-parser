@@ -36,7 +36,7 @@ public class RSSFeedServiceImplTest {
         rssFeedService = new RSSFeedServiceImpl(rssFeedRepository);
         List<RSSFeed> mockRSSFeeds = this.getMockRSRssFeeds();
         Pageable paging = PageRequest.of(0, 2);
-        rssFeedPage = new PageImpl<RSSFeed>(mockRSSFeeds.subList(0, 2), paging, mockRSSFeeds.size());
+        rssFeedPage = new PageImpl<>(mockRSSFeeds.subList(0, 2), paging, mockRSSFeeds.size());
     }
 
     @Test
@@ -65,7 +65,17 @@ public class RSSFeedServiceImplTest {
         Mockito.doReturn(this.getMockRSRssFeeds()).when(rssFeedRepository).saveAll(Mockito.any(List.class));
         List<RSSFeed> rssFeeds = rssFeedService.addRSSFeeds(this.getMockRSRssFeeds());
         Assert.assertNotNull(rssFeeds);
+        Assert.assertEquals(1, rssFeeds.get(0).compareTo(this.getMockRSRssFeeds().get(0)));
         Assert.assertEquals(this.getMockRSRssFeeds().size(), rssFeeds.size());
+    }
+
+    @Test
+    public void updateRSSFeed() {
+        logger.info("Update RSSFeeds Test");
+        RSSFeed mockRSSFeed = Mockito.mock(RSSFeed.class);
+        Mockito.doReturn(mockRSSFeed).when(rssFeedRepository).save(Mockito.any(RSSFeed.class));
+        RSSFeed rssFeeds = rssFeedService.updateRSSFeed(mockRSSFeed);
+        Assert.assertNotNull(rssFeeds);
     }
 
     private List<RSSFeed> getMockRSRssFeeds() {
@@ -84,8 +94,12 @@ public class RSSFeedServiceImplTest {
         rssFeedTwo.setPublicationDate(new Timestamp(System.currentTimeMillis()));
         rssFeedTwo.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
+        RSSFeed rssFeedThree = new RSSFeed("test-link three", "test title three",
+                "test description three", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+
         mockRSSFeeds.add(rssFeedTwo);
         mockRSSFeeds.add(rssFeedOne);
+        mockRSSFeeds.add(rssFeedThree);
         return mockRSSFeeds;
     }
 

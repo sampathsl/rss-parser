@@ -14,9 +14,6 @@ public class DataInValidator implements ConstraintValidator<DataIn, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
         return Arrays.asList(inputData).contains(value);
     }
 }
