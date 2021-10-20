@@ -3,10 +3,12 @@ package com.gifted.rss.service;
 import com.gifted.rss.dto.RSSFeedDto;
 import com.gifted.rss.entity.RSSFeed;
 import com.gifted.rss.repository.RSSFeedRepository;
+import com.gifted.rss.util.enums.SORTBY;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -44,7 +46,7 @@ public class RSSFeedServiceImplTest {
         logger.info("Get All RSSFeeds Test");
         Pageable pageable = PageRequest.of(0, 2, Sort.by("updatedDate").descending());
         Mockito.when(rssFeedRepository.findAll(pageable)).thenReturn(rssFeedPage);
-        Page<RSSFeed> pagableRSSFeeds = rssFeedService.getLatestRSSFeeds(0, 2, "updatedDate", "desc");
+        Page<RSSFeed> pagableRSSFeeds = rssFeedService.getLatestRSSFeeds(0, 2, "updated_date", "desc");
         Assert.assertNotNull(pagableRSSFeeds);
         Assert.assertEquals(rssFeedPage.get().count(), pagableRSSFeeds.get().count());
     }
@@ -54,7 +56,7 @@ public class RSSFeedServiceImplTest {
         logger.info("Get All RSSFeeds Data Test");
         Pageable pageable = PageRequest.of(0, 2, Sort.by("updatedDate").ascending());
         Mockito.when(rssFeedRepository.findAll(pageable)).thenReturn(rssFeedPage);
-        Page<RSSFeedDto> pagableRSSFeeds = rssFeedService.getLatestRSSData(0, 2, "updatedDate", "asc");
+        Page<RSSFeedDto> pagableRSSFeeds = rssFeedService.getLatestRSSData(0, 2, "updated_date", "asc");
         Assert.assertNotNull(pagableRSSFeeds);
         Assert.assertEquals(rssFeedPage.get().count(), pagableRSSFeeds.get().count());
     }
@@ -70,12 +72,40 @@ public class RSSFeedServiceImplTest {
     }
 
     @Test
-    public void updateRSSFeed() {
+    public void updateRSSFeedTest() {
         logger.info("Update RSSFeeds Test");
         RSSFeed mockRSSFeed = Mockito.mock(RSSFeed.class);
         Mockito.doReturn(mockRSSFeed).when(rssFeedRepository).save(Mockito.any(RSSFeed.class));
         RSSFeed rssFeeds = rssFeedService.updateRSSFeed(mockRSSFeed);
         Assert.assertNotNull(rssFeeds);
+    }
+
+    @Test
+    public void getSortByValueTest() {
+        logger.info("Get Sort By Value Test");
+        String id = "id";
+        String link = "link";
+        String title = "title";
+        String description = "description";
+        String publicationDate = "publication_date";
+        String publicationDateColumn = "publicationDate";
+        String updatedDate = "updated_date";
+        String updatedDateColumn = "updatedDate";
+
+        RSSFeedService mockRSSFeedService = Mockito.mock(RSSFeedServiceImpl.class);
+        String idColumn = rssFeedService.getSortByValue(id);
+        String linkColumn = rssFeedService.getSortByValue(link);
+        String titleColumn = rssFeedService.getSortByValue(title);
+        String descriptionColumn = rssFeedService.getSortByValue(description);
+        String publicationDateSortingColumn = rssFeedService.getSortByValue(publicationDate);
+        String updatedDateSortingColumn = rssFeedService.getSortByValue(updatedDate);
+
+        Assert.assertEquals(id, idColumn);
+        Assert.assertEquals(link, linkColumn);
+        Assert.assertEquals(title, titleColumn);
+        Assert.assertEquals(description, descriptionColumn);
+        Assert.assertEquals(publicationDateColumn, publicationDateSortingColumn);
+        Assert.assertEquals(updatedDateColumn, updatedDateSortingColumn);
     }
 
     private List<RSSFeed> getMockRSRssFeeds() {

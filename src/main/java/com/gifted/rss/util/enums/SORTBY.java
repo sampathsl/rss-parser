@@ -11,8 +11,8 @@ public enum SORTBY {
     LINK("link"),
     TITLE("title"),
     DESCRIPTION("description"),
-    PUBLICATION_DATE("publicationDate"),
-    UPDATED_DATE("updatedDate");
+    PUBLICATION_DATE("publication_date"),
+    UPDATED_DATE("updated_date");
 
     private final String value;
 

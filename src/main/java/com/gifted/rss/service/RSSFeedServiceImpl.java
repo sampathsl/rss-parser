@@ -47,9 +47,10 @@ public class RSSFeedServiceImpl implements RSSFeedService {
      */
     @Override
     public Page<RSSFeed> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        String sort = getSortByValue(sortBy);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         if (direction.contentEquals("asc")) {
-            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+            pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         }
         return rssFeedRepository.findAll(pageable);
     }
@@ -97,6 +98,22 @@ public class RSSFeedServiceImpl implements RSSFeedService {
      */
     public RSSFeed updateRSSFeed(RSSFeed updateRSSFeed) {
         return rssFeedRepository.save(updateRSSFeed);
+    }
+
+    /**
+     * Get sort by column name for given sort parameter
+     * @param sortBy the parameter value
+     * @return the sorting column name
+     */
+    public String getSortByValue(String sortBy) {
+        switch (sortBy) {
+            case "id":  return "id";
+            case "link":  return "link";
+            case "title":  return "title";
+            case "description":  return "description";
+            case "publication_date":  return "publicationDate";
+            default: return "updatedDate";
+        }
     }
 
 }

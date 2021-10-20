@@ -35,8 +35,8 @@ public class RSSFeedController {
     @GetMapping("/items")
     public Page<RSSFeedDto> getItems(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
                                      @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
-                                     @RequestParam(name = "sortBy", required = false, defaultValue = "updatedDate")
-                                     @DataIn(anyOf = {"id", "link", "title", "description", "publicationDate", "updatedDate"}) String sortBy,
+                                     @RequestParam(name = "sort", required = false, defaultValue = "updated_date")
+                                     @DataIn(anyOf = {"id", "link", "title", "description", "publication_date", "updated_date"}) String sortBy,
                                      @RequestParam(name = "direction", required = false, defaultValue = "desc")
                                      @DataIn(anyOf = {"asc", "desc"}) String direction) {
         return rssFeedService.getLatestRSSData(page, size, sortBy, direction);

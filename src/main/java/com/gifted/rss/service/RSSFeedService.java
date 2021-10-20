@@ -17,4 +17,5 @@ public interface RSSFeedService {
     public Page<RSSFeed> getLatestRSSFeeds(Integer page, Integer size, String sortBy, String direction);
     public Page<RSSFeedDto> getLatestRSSData(Integer page, Integer size, String sortBy, String direction);
     public RSSFeed updateRSSFeed(RSSFeed updateRSSFeed);
+    public String getSortByValue(String sortBy);
 }
