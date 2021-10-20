@@ -28,14 +28,14 @@ public class RSSFeedControllerTests {
     }
 
     @Test
-    public void getItemsTest() throws Exception {
-        mockMvc.perform(get("/items?page=1&size=1"))
+    public void getItemsInitialTest() throws Exception {
+        mockMvc.perform(get("/items?page=0&size=10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", IsCollectionWithSize.hasSize(0)));
     }
 
     @Test
-    public void getEmptyItemsWithOutParamTest() throws Exception {
+    public void getItemsWithOutParamTest() throws Exception {
         mockMvc.perform(get("/items"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
@@ -50,7 +50,7 @@ public class RSSFeedControllerTests {
     }
 
     @Test
-    public void getEmptyItemsWithParamTest() throws Exception {
+    public void getItemsWithParamTest() throws Exception {
         mockMvc.perform(get("/items?page=1&size=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
@@ -65,9 +65,15 @@ public class RSSFeedControllerTests {
     }
 
     @Test
-    public void getEmptyItemsWithParamEmptyTest() throws Exception {
+    public void getItemsWithParamEmptyTest() throws Exception {
         mockMvc.perform(get("/items?page=&size="))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getItemsMarformedParameterTest() throws Exception {
+        mockMvc.perform(get("/items?page=fds&size=sdfds"))
+                .andExpect(MockMvcResultMatchers.status().is5xxServerError());
     }
 
 }
