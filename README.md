@@ -11,6 +11,12 @@ cd rss-parser
 java -jar target/rss-parser-0.0.1-SNAPSHOT.jar
 ```
 
+Or you can run it from Maven directly using the Spring Boot Maven plugin. If you do this it will pick up changes that you make in the project immediately (changes to Java source files require a compile as well - most people use an IDE for this):
+
+```
+./mvnw spring-boot:run
+```
+
 ## Running RSSFeed Parser Locally Using Docker
 RSSFeed Parser is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/). You can run the application as docker container:
 
@@ -27,11 +33,6 @@ After successfully running the application you can access RSSFeed Parser API her
 
 <img width="1042" alt="rssfeed-api-screenshot" src="https://github.com/sampathsl/rss-parser/blob/master/docs/api.png">
 
-Or you can run it from Maven directly using the Spring Boot Maven plugin. If you do this it will pick up changes that you make in the project immediately (changes to Java source files require a compile as well - most people use an IDE for this):
-
-```
-./mvnw spring-boot:run
-```
 
 ## Database configuration
 
