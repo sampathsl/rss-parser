@@ -2,7 +2,6 @@ package com.gifted.rss.util;
 
 import com.gifted.rss.entity.RSSFeed;
 import com.gifted.rss.exception.ConnectionErrorException;
-import com.gifted.rss.exception.RSSFeedNotFound;
 import com.gifted.rss.service.RSSFeedService;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -119,15 +118,11 @@ public class RSSFeedTaskScheduler {
         List<RSSFeed> updatedRSSFeeds = new ArrayList<>();
         List<RSSFeed> allNewAndUpdatedRSSFeeds = getAllNewAndUpdatedRSSFeeds(existingRssFeeds, latestRssFeeds);
         allNewAndUpdatedRSSFeeds.forEach(rf -> {
-            try {
-                RSSFeed updatedRSSFeed = updateExistingRSSFeed(existingRssFeeds, rf);
-                if (updatedRSSFeed.isNew()) {
-                    newRSSFeeds.add(updatedRSSFeed);
-                } else {
-                    updatedRSSFeeds.add(updatedRSSFeed);
-                }
-            } catch (RSSFeedNotFound exception) {
-                logger.error("Existing RSSFeed Not Found for {} {} ", rf.getTitle(), exception.getMessage());
+            RSSFeed newOrUpdatedRSSFeed = updateExistingRSSFeed(existingRssFeeds, rf);
+            if (newOrUpdatedRSSFeed.isNew()) {
+                newRSSFeeds.add(newOrUpdatedRSSFeed);
+            } else {
+                updatedRSSFeeds.add(newOrUpdatedRSSFeed);
             }
         });
         newAndUpdatedRSSFeeds[0] = newRSSFeeds;
@@ -139,7 +134,7 @@ public class RSSFeedTaskScheduler {
         return latestRssFeeds.stream().filter(rf -> !existingRssFeeds.contains(rf)).distinct().collect(Collectors.toList());
     }
 
-    private RSSFeed updateExistingRSSFeed(List<RSSFeed> oldRssFeeds, RSSFeed updatedRSSFeed) throws RSSFeedNotFound {
+    private RSSFeed updateExistingRSSFeed(List<RSSFeed> oldRssFeeds, RSSFeed updatedRSSFeed) {
         List<RSSFeed> newOrUpdatedList = new ArrayList<>();
         oldRssFeeds.stream()
                 .filter(old -> (updatedRSSFeed.getLink().equals(old.getLink()) &&
@@ -149,12 +144,10 @@ public class RSSFeedTaskScheduler {
                         (updatedRSSFeed.getTitle().equals(old.getTitle()) &&
                                 updatedRSSFeed.getDescription().equals(old.getDescription())))
                 .forEach(newOrUpdatedList::add);
-        if (newOrUpdatedList.isEmpty()) {
-            return updatedRSSFeed;
-        } else if (newOrUpdatedList.size() == 1) {
+        if (newOrUpdatedList.size() == 1) {
             return updateOldRSSFeed(oldRssFeeds.get(0), updatedRSSFeed);
         }
-        throw new RSSFeedNotFound("Old RSSFeed Not Found!");
+        return updatedRSSFeed;
     }
 
     private RSSFeed updateOldRSSFeed(RSSFeed oldRSSFeed, RSSFeed newRSSFeed) {
