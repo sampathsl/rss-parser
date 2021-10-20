@@ -1,10 +1,7 @@
 package com.gifted.rss.util;
 
 import com.gifted.rss.entity.RSSFeed;
-import com.gifted.rss.exception.ConnectionErrorException;
 import com.gifted.rss.service.RSSFeedService;
-import com.rometools.rome.io.FeedException;
-import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
