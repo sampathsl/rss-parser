@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
-public class RSSFeedExceptionController {
+public class RSSFeedExceptionHandler {
 
+    /**
+     * Global common exception handler
+     * @param ex the incoming {@link Exception} object
+     * @param request the incoming {@link WebRequest} object
+     * @return the {@link ResponseEntity} object with exception details
+     */
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleCommonException(Exception ex, WebRequest request) {
         APIError apiError = new APIError(
