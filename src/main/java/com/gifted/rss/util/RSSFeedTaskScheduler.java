@@ -46,6 +46,12 @@ public class RSSFeedTaskScheduler {
         this.zdt = zdt;
     }
 
+    /**
+     * Scheduler process for load RSSFeed data from the RSSFeed source
+     * @throws IOException throws {@link IOException} when the RSSFeed source connection is not established
+     * @throws FeedException throws {@link FeedException} when the malformed RSSFeed feed received
+     * @throws ConnectionErrorException throws {@link ConnectionErrorException} when the RSSFeed source connection is not established
+     */
     @Scheduled(cron = "${rss.feed.scheduler.expression:0 0/5 * * * ?}")
     public void loadRSSFeeds() throws IOException, FeedException, ConnectionErrorException {
 
@@ -104,14 +110,29 @@ public class RSSFeedTaskScheduler {
 
     }
 
+    /**
+     * Add all the RSSFeed for given list of {@link RSSFeed}
+     * @param newRssFeeds the list of new {@link RSSFeed}
+     */
     public void addAllRSSFeeds(List<RSSFeed> newRssFeeds) {
         rssFeedService.addRSSFeeds(newRssFeeds);
     }
 
+    /**
+     * Update all the modified RSSFeeds for given list of {@link RSSFeed}
+     * @param updatedRssFeeds the list of updated {@link RSSFeed}
+     */
     public void updateAllRSSFeeds(List<RSSFeed> updatedRssFeeds) {
         updatedRssFeeds.forEach(rssFeedForUpdate -> rssFeedService.updateRSSFeed(rssFeedForUpdate));
     }
 
+    /**
+     * Extract updated list of {@link RSSFeed} and new list of {@link RSSFeed} from the given list of
+     * existing RSSFeeds and incoming RSSFeeds lists
+     * @param existingRssFeeds the list of existing RSSFeeds from database
+     * @param latestRssFeeds the list of incoming RSSFeeds from RSSFeed source
+     * @return the array of {@link List} containing new {@link RSSFeed} and updated {@link RSSFeed}
+     */
     public List[] getNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
         List[] newAndUpdatedRSSFeeds = new List[2];
         List<RSSFeed> newRSSFeeds = new ArrayList<>();
@@ -130,10 +151,23 @@ public class RSSFeedTaskScheduler {
         return newAndUpdatedRSSFeeds;
     }
 
+    /**
+     * Remove unmodified RSSFeeds from the incoming RSSFeeds
+     * @param existingRssFeeds the list of existing RSSFeeds from database
+     * @param latestRssFeeds the list of incoming RSSFeeds from RSSFeed source
+     * @return the list of new and modified RSSFeeds
+     */
     private List<RSSFeed> getAllNewAndUpdatedRSSFeeds(List<RSSFeed> existingRssFeeds, List<RSSFeed> latestRssFeeds) {
         return latestRssFeeds.stream().filter(rf -> !existingRssFeeds.contains(rf)).distinct().collect(Collectors.toList());
     }
 
+    /**
+     * Update the modified RSSFeed from the extracted existing RSSFeed
+     * If there are any matching existing RSSFeed not found then the given RSSFeed considered as new RSSFeed
+     * @param oldRssFeeds the list of existing RSSFeeds from database
+     * @param updatedRSSFeed the incoming RSSFeed from the source
+     * @return the new or modified {@link RSSFeed}
+     */
     private RSSFeed updateExistingRSSFeed(List<RSSFeed> oldRssFeeds, RSSFeed updatedRSSFeed) {
         List<RSSFeed> newOrUpdatedList = new ArrayList<>();
         oldRssFeeds.stream()
@@ -150,6 +184,12 @@ public class RSSFeedTaskScheduler {
         return updatedRSSFeed;
     }
 
+    /**
+     * Update the existing db RSSFeed information with incoming updated RSSFeed
+     * @param oldRSSFeed the existing {@link RSSFeed} object
+     * @param newRSSFeed the incoming modified {@link RSSFeed} object
+     * @return the modified {@link RSSFeed} object with new data
+     */
     private RSSFeed updateOldRSSFeed(RSSFeed oldRSSFeed, RSSFeed newRSSFeed) {
         oldRSSFeed.setLink(newRSSFeed.getLink());
         oldRSSFeed.setTitle(newRSSFeed.getTitle());
